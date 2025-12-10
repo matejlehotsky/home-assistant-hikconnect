@@ -10,6 +10,22 @@
           "call in progress": "In progress"
         }
       }
+    },
+    "button": {
+      "answer_call": {
+        "name": "Answer call"
+      },
+      "cancel_call": {
+        "name": "Cancel call"
+      },
+      "hangup_call": {
+        "name": "Hang up"
+      }
+    },
+    "camera": {
+      "camera": {
+        "name": "Camera"
+      }
     }
   },
   "config": {

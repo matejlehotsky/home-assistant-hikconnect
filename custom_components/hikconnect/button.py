@@ -28,9 +28,11 @@ async def async_setup_entry(
 
 
 class AnswerCallButton(ButtonEntity):
-    """
-    Represents a answer call operation of an indoor station.
-    """
+    """Represents an answer call operation of an indoor station."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "answer_call"
+    _attr_icon = "mdi:phone"
 
     def __init__(self, api: HikConnect, device_info: dict):
         super().__init__()
@@ -41,29 +43,22 @@ class AnswerCallButton(ButtonEntity):
         await self._api.answer_call(self._device_info["serial"])
 
     @property
-    def name(self):
-        return f"{self._device_info['name']} answer call"  # TODO translate?
-
-    @property
     def unique_id(self):
         return "-".join((DOMAIN, self._device_info["id"], "answer-call"))
 
     @property
     def device_info(self):
-        # https://developers.home-assistant.io/docs/device_registry_index/#device-properties
         return {
             "identifiers": {(DOMAIN, self._device_info["id"])},
         }
-
-    @property
-    def icon(self):
-        return "mdi:phone"
         
 
 class CancelCallButton(ButtonEntity):
-    """
-    Represents a cancel call operation of an indoor station.
-    """
+    """Represents a cancel call operation of an indoor station."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "cancel_call"
+    _attr_icon = "mdi:phone-cancel"
 
     def __init__(self, api: HikConnect, device_info: dict):
         super().__init__()
@@ -74,29 +69,22 @@ class CancelCallButton(ButtonEntity):
         await self._api.cancel_call(self._device_info["serial"])
 
     @property
-    def name(self):
-        return f"{self._device_info['name']} cancel call"  # TODO translate?
-
-    @property
     def unique_id(self):
         return "-".join((DOMAIN, self._device_info["id"], "cancel-call"))
 
     @property
     def device_info(self):
-        # https://developers.home-assistant.io/docs/device_registry_index/#device-properties
         return {
             "identifiers": {(DOMAIN, self._device_info["id"])},
         }
 
-    @property
-    def icon(self):
-        return "mdi:phone-hangup"
-
 
 class HangupCallButton(ButtonEntity):
-    """
-    Represents a hangup call operation of an indoor station.
-    """
+    """Represents a hangup call operation of an indoor station."""
+
+    _attr_has_entity_name = True
+    _attr_translation_key = "hangup_call"
+    _attr_icon = "mdi:phone-hangup"
 
     def __init__(self, api: HikConnect, device_info: dict):
         super().__init__()
@@ -107,20 +95,11 @@ class HangupCallButton(ButtonEntity):
         await self._api.hangup_call(self._device_info["serial"])
 
     @property
-    def name(self):
-        return f"{self._device_info['name']} hangup call"  # TODO translate?
-
-    @property
     def unique_id(self):
         return "-".join((DOMAIN, self._device_info["id"], "hangup-call"))
 
     @property
     def device_info(self):
-        # https://developers.home-assistant.io/docs/device_registry_index/#device-properties
         return {
             "identifiers": {(DOMAIN, self._device_info["id"])},
         }
-
-    @property
-    def icon(self):
-        return "mdi:phone-hangup"

@@ -15,6 +15,8 @@ _schema = {
     vol.Required("username"): str,
     vol.Required("password"): str,
     vol.Required("base_url", default=HikConnect.BASE_URL): str,
+    vol.Optional("local_ip", default=""): str,
+    vol.Optional("local_password", default=""): str,
 }
 DATA_SCHEMA = vol.Schema(_schema)
 
@@ -79,11 +81,22 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
 
 class OptionsFlowHandler(config_entries.OptionsFlowWithReload):
-    """Handle Hik-Connect options (scan interval, etc.)."""
+    """Handle Hik-Connect options (scan interval, local device access, etc.)."""
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""
         if user_input is not None:
+            # local_ip/local_password are consumed from entry.data (not
+            # entry.options) elsewhere in the integration, so keep them in sync.
+            new_data = {
+                **self.config_entry.data,
+                "local_ip": user_input.get("local_ip", ""),
+                "local_password": user_input.get("local_password", ""),
+            }
+            if new_data != self.config_entry.data:
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry, data=new_data
+                )
             return self.async_create_entry(title="", data=user_input)
 
         current_interval = self.config_entry.options.get(
@@ -94,7 +107,14 @@ class OptionsFlowHandler(config_entries.OptionsFlowWithReload):
                 vol.Required(
                     "scan_interval_minutes", default=current_interval
                 ): vol.All(int, vol.Range(min=5, max=60)),
+                vol.Optional(
+                    "local_ip",
+                    default=self.config_entry.data.get("local_ip", ""),
+                ): str,
+                vol.Optional(
+                    "local_password",
+                    default=self.config_entry.data.get("local_password", ""),
+                ): str,
             }
         )
         return self.async_show_form(step_id="init", data_schema=options_schema)
-

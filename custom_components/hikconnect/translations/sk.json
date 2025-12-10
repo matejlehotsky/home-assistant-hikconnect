@@ -10,6 +10,22 @@
           "call in progress": "Prebieha hovor"
         }
       }
+    },
+    "button": {
+      "answer_call": {
+        "name": "Prijať hovor"
+      },
+      "cancel_call": {
+        "name": "Zrušiť hovor"
+      },
+      "hangup_call": {
+        "name": "Zavesiť"
+      }
+    },
+    "camera": {
+      "camera": {
+        "name": "Kamera"
+      }
     }
   },
   "config": {

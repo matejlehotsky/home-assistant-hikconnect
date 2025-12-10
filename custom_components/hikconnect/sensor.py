@@ -35,7 +35,7 @@ async def async_setup_entry(
 
     new_entities = []
     for device_info in coordinator.data:
-        new_entities.append(CallStatusSensor(api, device_info, local_ip, local_password))
+        new_entities.append(CallStatusSensor(api, device_info, local_ip, local_password, hass))
 
     if new_entities:
         async_add_entities(new_entities, update_before_add=True)
@@ -75,7 +75,26 @@ class CallStatusSensor(SensorEntity):
                 ),
                 SCAN_INTERVAL_TIMEOUT.seconds,
             )
-            self._attr_native_value = res["status"]
+            new_status = res["status"]
+
+            # Fire event when status changes
+            if self._hass and new_status != self._previous_status:
+                event_data = {
+                    "device_id": self._device_info["id"],
+                    "device_serial": self._device_info["serial"],
+                    "device_name": self._device_info["name"],
+                    "status": new_status,
+                    "previous_status": self._previous_status,
+                }
+                self._hass.bus.async_fire(f"{DOMAIN}_call_status_changed", event_data)
+
+                # Fire specific event for ringing (easier for automations)
+                if new_status == "ringing":
+                    self._hass.bus.async_fire(f"{DOMAIN}_doorbell_ringing", event_data)
+
+                self._previous_status = new_status
+
+            self._attr_native_value = new_status
             self._attr_extra_state_attributes = res.get("info", {})
             self._attr_available = True
             self._last_error = None

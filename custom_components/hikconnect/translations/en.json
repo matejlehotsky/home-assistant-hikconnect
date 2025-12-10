@@ -1,4 +1,17 @@
 {
+  "entity": {
+    "sensor": {
+      "call_status": {
+        "name": "Call status",
+        "state": {
+          "idle": "Idle",
+          "ringing": "Ringing",
+          "ongoing": "In progress",
+          "call in progress": "In progress"
+        }
+      }
+    }
+  },
   "config": {
     "step": {
       "user": {
@@ -6,8 +19,11 @@
         "data": {
           "username": "Username",
           "password": "Password",
-          "base_url": "Hik-Connect API URL"
-        }
+          "base_url": "Hik-Connect API URL",
+          "local_ip": "Device Local IP (optional, for call status)",
+          "local_password": "Device Admin Password (optional, for call status)"
+        },
+        "description": "Enter your Hik-Connect credentials. For call status to work, also enter your device's local IP address and admin password."
       }
     },
     "error": {
@@ -17,6 +33,18 @@
     },
     "abort": {
       "already_configured": "Already configured for this username."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Local Device Settings",
+        "description": "Configure local device access for call status. The cloud API is currently broken, so local access is required for call status to work.",
+        "data": {
+          "local_ip": "Device Local IP",
+          "local_password": "Device Admin Password"
+        }
+      }
     }
   }
 }

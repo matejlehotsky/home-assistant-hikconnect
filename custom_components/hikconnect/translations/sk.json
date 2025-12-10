@@ -1,0 +1,50 @@
+{
+  "entity": {
+    "sensor": {
+      "call_status": {
+        "name": "Stav hovoru",
+        "state": {
+          "idle": "Nečinný",
+          "ringing": "Zvoní",
+          "ongoing": "Prebieha hovor",
+          "call in progress": "Prebieha hovor"
+        }
+      }
+    }
+  },
+  "config": {
+    "step": {
+      "user": {
+        "title": "Prihlasovacie údaje Hik-Connect",
+        "data": {
+          "username": "Používateľské meno",
+          "password": "Heslo",
+          "base_url": "URL adresa Hik-Connect API",
+          "local_ip": "Lokálna IP adresa zariadenia (voliteľné, pre stav hovoru)",
+          "local_password": "Heslo správcu zariadenia (voliteľné, pre stav hovoru)"
+        },
+        "description": "Zadajte svoje prihlasovacie údaje Hik-Connect. Pre funkčnosť stavu hovoru zadajte aj lokálnu IP adresu zariadenia a heslo správcu."
+      }
+    },
+    "error": {
+      "login_failed": "Chyba prihlásenia. Môže ísť o nesprávnu kombináciu mena a hesla alebo CAPTCHA. Skúste sa prihlásiť cez oficiálnu aplikáciu Hik-Connect.",
+      "unknown": "Neznáma chyba.",
+      "invalid_base_url": "URL musí byť vo formáte: http(s)://example.com"
+    },
+    "abort": {
+      "already_configured": "Už je nakonfigurované pre toto používateľské meno."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Nastavenia lokálneho zariadenia",
+        "description": "Nakonfigurujte lokálny prístup k zariadeniu pre stav hovoru. Cloud API momentálne nefunguje, preto je pre funkčnosť stavu hovoru potrebný lokálny prístup.",
+        "data": {
+          "local_ip": "Lokálna IP adresa zariadenia",
+          "local_password": "Heslo správcu zariadenia"
+        }
+      }
+    }
+  }
+}

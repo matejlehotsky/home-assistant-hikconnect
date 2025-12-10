@@ -93,6 +93,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     hass.data[DOMAIN] = {
         "api": api,
         "coordinator": coordinator,
+        "local_ip": entry.data.get("local_ip", ""),
+        "local_password": entry.data.get("local_password", ""),
     }
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 

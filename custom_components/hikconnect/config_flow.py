@@ -14,6 +14,8 @@ _schema = {
     vol.Required("username"): str,
     vol.Required("password"): str,
     vol.Required("base_url", default=HikConnect.BASE_URL): str,
+    vol.Optional("local_ip", default=""): str,
+    vol.Optional("local_password", default=""): str,
 }
 DATA_SCHEMA = vol.Schema(_schema)
 
@@ -47,6 +49,11 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 2
     CONNECTION_CLASS = config_entries.CONN_CLASS_CLOUD_POLL
 
+    @staticmethod
+    def async_get_options_flow(config_entry):
+        """Get the options flow for this handler."""
+        return OptionsFlowHandler(config_entry)
+
     async def async_step_user(self, user_input=None):
         """Handle the initial step of config flow initiated by user manually."""
         errors = {}
@@ -69,3 +76,35 @@ class ConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 errors["base"] = "unknown"
 
         return self.async_show_form(step_id="user", data_schema=DATA_SCHEMA, errors=errors)
+
+
+class OptionsFlowHandler(config_entries.OptionsFlow):
+    """Handle options flow for Hik-Connect."""
+
+    def __init__(self, config_entry):
+        """Initialize options flow."""
+        self._config_entry = config_entry
+
+    async def async_step_init(self, user_input=None):
+        """Manage the options."""
+        if user_input is not None:
+            # Update config entry data with new values
+            new_data = {**self._config_entry.data, **user_input}
+            self.hass.config_entries.async_update_entry(
+                self._config_entry, data=new_data
+            )
+            return self.async_create_entry(title="", data=user_input)
+
+        # Build schema with current values as defaults
+        options_schema = vol.Schema({
+            vol.Optional(
+                "local_ip",
+                default=self._config_entry.data.get("local_ip", ""),
+            ): str,
+            vol.Optional(
+                "local_password",
+                default=self._config_entry.data.get("local_password", ""),
+            ): str,
+        })
+
+        return self.async_show_form(step_id="init", data_schema=options_schema)

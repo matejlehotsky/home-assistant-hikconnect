@@ -46,7 +46,7 @@ class CallStatusSensor(SensorEntity):
 
     _attr_device_class = SensorDeviceClass.ENUM
     _attr_has_entity_name = True
-    _attr_options = ["idle", "ringing", "ongoing", "call in progress"]
+    _attr_options = ["idle", "ringing", "call in progress"]
     _attr_translation_key = "call_status"
 
     def __init__(self, api: HikConnect, device_info: dict, local_ip: str = "", local_password: str = "", hass: HomeAssistant = None):
@@ -165,7 +165,7 @@ class CallStatusSensor(SensorEntity):
             return "mdi:phone-hangup"
         elif self.native_value == "ringing":
             return "mdi:phone-ring"
-        elif self.native_value in ("call in progress", "ongoing"):
+        elif self.native_value == "call in progress":
             return "mdi:phone-in-talk"
         else:
             return "mdi:phone-alert"

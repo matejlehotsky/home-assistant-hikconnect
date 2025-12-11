@@ -14,6 +14,14 @@ CALL_STATUS_MAPPING = {
     3: "call in progress",
 }
 
+# Normalize status strings from ISAPI to match our standard options
+ISAPI_STATUS_NORMALIZE = {
+    "ring": "ringing",
+    "ongoing": "call in progress",
+    "oncall": "call in progress",
+    "in progress": "call in progress",
+}
+
 CALL_INFO_MAPPING = {
     "buildingNo": "building_number",
     "floorNo": "floor_number",
@@ -216,10 +224,13 @@ async def get_call_status_isapi(
                     # Handle {"CallStatus": {"status": "idle"}} format
                     if "CallStatus" in data:
                         status = data["CallStatus"].get("status", "unknown").lower()
+                        status = ISAPI_STATUS_NORMALIZE.get(status, status)
                         return {"status": status, "info": {}}
                     # Handle {"status": "idle"} format
                     elif "status" in data:
-                        return {"status": data["status"].lower(), "info": {}}
+                        status = data["status"].lower()
+                        status = ISAPI_STATUS_NORMALIZE.get(status, status)
+                        return {"status": status, "info": {}}
                 except json.JSONDecodeError:
                     pass
 
